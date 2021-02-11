@@ -1,28 +1,19 @@
 <template>
   <div class="container">
     <h1>Result: {{ records }}</h1>
-    <div>
-      <Logo />
-      <h1 class="title">firebase_demo</h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
-    </div>
+    <h2>Todo:</h2>
+    <ul v-for="todo in records" :key="todo.name">
+      <li>
+        <div>
+          <input id="" type="checkbox" name="" :checked="todo.done" />
+          {{ todo.name }}
+          終了予定:
+          <span>{{ toDate(todo.scheduled_at).getFullYear() }}年</span>
+          <span>{{ toDate(todo.scheduled_at).getMonth() + 1 }}月</span>
+          <span>{{ toDate(todo.scheduled_at).getDate() }}日</span>
+        </div>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -30,13 +21,32 @@
 export default {
   data() {
     return {
-      records: 'Records is empty...',
+      // dummy data for v-for loop
+      records: [
+        {
+          id: 0,
+          name: 'none',
+          done: false,
+          scheduled_at: {
+            seconds: 0,
+            nanoseconds: 0,
+          },
+        },
+      ],
     }
   },
   mounted() {
     this.readFromFirestore()
   },
   methods: {
+    toDate(timestampObj) {
+      const timestamp = new this.$fireModule.firestore.Timestamp(
+        timestampObj.seconds,
+        timestampObj.nanoseconds
+      )
+
+      return timestamp.toDate()
+    },
     async readFromFirestore() {
       try {
         const todoRef = this.$fire.firestore.collection('todos')
@@ -56,35 +66,4 @@ export default {
 }
 </script>
 
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
-</style>
+<style></style>
