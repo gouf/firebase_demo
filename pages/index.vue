@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <h1>Result: {{ records }}</h1>
     <div>
       <Logo />
       <h1 class="title">firebase_demo</h1>
@@ -26,7 +27,33 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      records: 'Records is empty...',
+    }
+  },
+  mounted() {
+    this.readFromFirestore()
+  },
+  methods: {
+    async readFromFirestore() {
+      try {
+        const todoRef = this.$fire.firestore.collection('todos')
+        const snapshot = await todoRef.get()
+        const writingData = []
+
+        snapshot.forEach((doc) => {
+          writingData[writingData.length] = doc.data()
+        })
+
+        this.records = writingData
+      } catch (e) {
+        console.log(e)
+      }
+    },
+  },
+}
 </script>
 
 <style>

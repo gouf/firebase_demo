@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
@@ -35,7 +37,25 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/firebase',
+    '@nuxtjs/dotenv',
   ],
+
+  firebase: {
+    config: {
+      apiKey: process.env.ApiKey,
+      authDomain: process.env.AuthDomain,
+      databaseURL: process.env.DatabaseUrl,
+      projectId: process.env.ProjectId,
+      storageBucket: process.env.StorageBucket,
+      messagingSenderId: process.env.MessagingSenderId,
+      appId: process.env.AppId,
+    },
+    services: {
+      firestore: true, // Just as example. Can be any other service.
+    },
+    enablePersistence: true,
+  },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},
