@@ -4,14 +4,11 @@
     <h2>Todo:</h2>
     <ul v-for="todo in records" :key="todo.name">
       <li>
-        <div>
-          <input id="" type="checkbox" name="" :checked="todo.done" />
-          {{ todo.name }}
-          終了予定:
-          <span>{{ toDate(todo.scheduled_at).getFullYear() }}年</span>
-          <span>{{ toDate(todo.scheduled_at).getMonth() + 1 }}月</span>
-          <span>{{ toDate(todo.scheduled_at).getDate() }}日</span>
-        </div>
+        <todo-item
+          :name="todo.name"
+          :done="todo.done"
+          :scheduled_at="todo.scheduled_at"
+        ></todo-item>
       </li>
     </ul>
   </div>
@@ -39,14 +36,6 @@ export default {
     this.readFromFirestore()
   },
   methods: {
-    toDate(timestampObj) {
-      const timestamp = new this.$fireModule.firestore.Timestamp(
-        timestampObj.seconds,
-        timestampObj.nanoseconds
-      )
-
-      return timestamp.toDate()
-    },
     async readFromFirestore() {
       try {
         const todoRef = this.$fire.firestore.collection('todos')
